@@ -10,21 +10,7 @@ def _validate_sort(key_or_list, direction=None):
     :param direction int:
     :rtype: [(str key, int direction), ...]
     """
-    if direction is None and isinstance(key_or_list, (list, tuple)) \
-       and all(isinstance(tup, (list, tuple)) and len(tup) == 2 for tup in key_or_list):
-        _sort = key_or_list
-    elif direction is None and isinstance(key_or_list, str):
-        _sort = [(key_or_list, ASCENDING)]
-    elif isinstance(key_or_list, str) and isinstance(direction, int):
-        _sort = [(key_or_list, direction)]
-    else:
-        raise MongitaError("Unsupported sort parameter format. See the docs.")
-    for sort_key, sort_direction in _sort:
-        if not isinstance(sort_key, str):
-            raise MongitaError("Sort key(s) must be strings %r" % str(key_or_list))
-        if sort_direction not in (ASCENDING, DESCENDING):
-            raise MongitaError("Sort direction(s) must be either ASCENDING (1) or DESCENDING (-1). Not %r" % direction)
-    return _sort
+    pass
 
 
 class Cursor():
@@ -51,7 +37,7 @@ class Cursor():
         raise AttributeError()
 
     def __getitem__(self, val):
-        raise MongitaNotImplementedError.create("Cursor", '__getitem__')
+        pass
 
     def __iter__(self):
         for el in self._gen():
@@ -65,11 +51,7 @@ class Cursor():
         This exists so that we can maintain our position in the cursor and
         to not execute until we start requesting items
         """
-        if self._cursor:
-            return self._cursor
-        self._cursor = self._find(filter=self._filter, sort=self._sort,
-                                  limit=self._limit, skip=self._skip)
-        return self._cursor
+        pass
 
     @support_alert
     def next(self):
@@ -79,7 +61,7 @@ class Cursor():
 
         :rtype: dict
         """
-        return next(self._gen())
+        pass
 
     @support_alert
     def sort(self, key_or_list, direction=None):
@@ -94,12 +76,7 @@ class Cursor():
         :param direction mongita.ASCENDING|mongita.DESCENDING:
         :rtype: cursor.Cursor
         """
-
-        self._sort = _validate_sort(key_or_list, direction)
-        if self._cursor:
-            raise InvalidOperation("Cursor has already started and can't be sorted")
-
-        return self
+        pass
 
     @support_alert
     def limit(self, limit):
@@ -111,37 +88,22 @@ class Cursor():
         :param limit int:
         :rtype: cursor.Cursor
         """
-        if not isinstance(limit, int):
-            raise TypeError('Limit must be an integer')
-
-        if self._cursor:
-            raise InvalidOperation("Cursor has already started and can't be limited")
-
-        self._limit = limit
-        return self
+        pass
 
     @support_alert
     def skip(self, skip):
         """
         Skip the first [skip] results of this cursor.
         """
-        if not isinstance(skip, int):
-            raise TypeError("The 'skip' parameter must be an integer")
-        if skip < 0:
-            raise ValueError("The 'skip' parameter must be >=0")
-        if self._cursor:
-            raise InvalidOperation("Cursor has already started and skip can't be applied")
-
-        self._skip = skip
-        return self
+        pass
 
     @support_alert
     def clone(self):
-        return Cursor(self._find, self._filter, self._sort, self._limit, self._skip)
+        pass
 
     @support_alert
     def close(self):
         """
         Close this cursor to free the memory
         """
-        self._cursor = iter(())
+        pass

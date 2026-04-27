@@ -45,20 +45,7 @@ class Database():
         something, this will create a small metadata file to basically just store
         our collection_names
         """
-        metadata = self._engine.get_metadata(self._base_location)
-        if metadata:
-            if coll_name not in metadata['collection_names']:
-                metadata['collection_names'].append(coll_name)
-                assert self._engine.put_metadata(self._base_location, metadata)
-            return
-        self._engine.create_path(self._base_location)
-        metadata = MetaStorageObject({
-            'options': {},
-            'collection_names': [coll_name],
-            'uuid': str(bson.ObjectId()),
-        })
-        assert self._engine.put_metadata(self._base_location, metadata)
-        self.client.__create(self.name)
+        pass
 
     @support_alert
     def list_collection_names(self):
@@ -67,10 +54,7 @@ class Database():
 
         :rtype: list[str]
         """
-        metadata = self._engine.get_metadata(self._base_location)
-        if metadata:
-            return metadata['collection_names']
-        return []
+        pass
 
     @support_alert
     def list_collections(self):
@@ -80,11 +64,8 @@ class Database():
         :rtype: CommandCursor
         """
         def cursor():
-            for coll_name in self.list_collection_names():
-                if coll_name not in self._cache:
-                    self._cache[coll_name] = Collection(coll_name, self)
-                yield self._cache[coll_name]
-        return CommandCursor(cursor)
+            pass
+        pass
 
     @support_alert
     def drop_collection(self, name_or_collection):
@@ -94,17 +75,4 @@ class Database():
         :param name_or_collection str|collection.Collection:
         :rtype: None
         """
-        if isinstance(name_or_collection, Collection):
-            collection = name_or_collection.name
-        else:
-            collection = name_or_collection
-        self._engine.delete_dir(f'{self.name}.{collection}')
-        metadata = self._engine.get_metadata(self._base_location)
-        if metadata and collection in metadata['collection_names']:
-            metadata['collection_names'].remove(collection)
-            assert self._engine.put_metadata(self._base_location, metadata)
-        try:
-            self._cache[collection]._existence_verified = False
-            del self._cache[collection]
-        except KeyError:
-            pass
+        pass

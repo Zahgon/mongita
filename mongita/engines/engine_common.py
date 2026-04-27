@@ -108,7 +108,4 @@ class Engine(abc.ABC):
         Convenience method for finding a single object given the prefix.
         Returns a Location if an object exists, otherwise, None
         """
-
-        objs = self.list_ids(prefix, 1)
-        if objs:
-            return objs[0]
+        pass

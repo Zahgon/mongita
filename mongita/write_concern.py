@@ -17,4 +17,4 @@ class WriteConcern():
 
     @property
     def document(self):
-        return {}
+        pass

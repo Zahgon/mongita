@@ -58,26 +58,15 @@ class MongitaClient(abc.ABC):
         something, this will create a small metadata file to basically just store
         our database_names
         """
-        metadata = self.engine.get_metadata(self._base_location)
-        if metadata:
-            if db_name not in metadata['database_names']:
-                metadata['database_names'].append(db_name)
-                assert self.engine.put_metadata(self._base_location, metadata)
-            return
-        metadata = MetaStorageObject({
-            'options': {},
-            'database_names': [db_name],
-            'uuid': str(bson.ObjectId()),
-        })
-        assert self.engine.put_metadata(self._base_location, metadata)
+        pass
 
     @property
     def read_concern(self):
-        return self._read_concern
+        pass
 
     @property
     def write_concern(self):
-        return self._write_concern
+        pass
 
     @support_alert
     def close(self):
@@ -86,7 +75,7 @@ class MongitaClient(abc.ABC):
 
         :rtype: None
         """
-        self.engine.close()
+        pass
 
     @support_alert
     def list_database_names(self):
@@ -95,10 +84,7 @@ class MongitaClient(abc.ABC):
 
         :rtype: list[str]
         """
-        metadata = self.engine.get_metadata(self._base_location)
-        if metadata:
-            return metadata['database_names']
-        return []
+        pass
 
     @support_alert
     def list_databases(self):
@@ -108,11 +94,8 @@ class MongitaClient(abc.ABC):
         :rtype: CommandCursor
         """
         def cursor():
-            for db_name in self.list_database_names():
-                if db_name not in self._cache:
-                    self._cache[db_name] = Database(db_name, self)
-                yield self._cache[db_name]
-        return CommandCursor(cursor)
+            pass
+        pass
 
     @support_alert
     def drop_database(self, name_or_database):
@@ -122,20 +105,7 @@ class MongitaClient(abc.ABC):
         :param name_or_database str|database.Database:
         :rtype: None
         """
-        if isinstance(name_or_database, Database):
-            db_name = name_or_database.name
-        else:
-            db_name = name_or_database
-
-        db = self[db_name]
-        for coll in list(db.list_collection_names()):
-            db.drop_collection(coll)
-        metadata = self.engine.get_metadata(self._base_location)
-        if metadata and db_name in metadata['database_names']:
-            metadata['database_names'].remove(db_name)
-            assert self.engine.put_metadata(self._base_location, metadata)
-        self.engine.delete_dir(db_name)
-        self._cache.pop(db_name, None)
+        pass
 
 
 class MongitaClientDisk(MongitaClient):

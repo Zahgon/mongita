@@ -18,58 +18,34 @@ class MemoryEngine(Engine):
 
     @staticmethod
     def create(strict=False):
-        return MemoryEngine(strict)
+        pass
 
     def put_doc(self, collection, doc, no_overwrite=False):
-        doc_id = str(doc['_id'])
-        if no_overwrite and doc_id in self._cache[collection]:
-            return False
-        if self._strict:
-            self._cache[itrn(collection)][itrn(doc_id)] = bson.encode(doc)
-        else:
-            self._cache[itrn(collection)][itrn(doc_id)] = doc
-        return True
+        pass
 
     def get_doc(self, collection, doc_id):
-        obj = self._cache[collection].get(str(doc_id))
-        if self._strict and obj:
-            return bson.decode(obj)
-        return obj
+        pass
 
     def doc_exists(self, collection, doc_id):
-        return str(doc_id) in self._cache[collection]
+        pass
 
     def list_ids(self, collection, limit=None):
-        keys = self._cache.get(collection, {}).keys()
-        if limit is None:
-            return list(keys)
-        return list(itertools.islice(keys, limit))
+        pass
 
     def delete_doc(self, collection, doc_id):
-        self._cache[collection].pop(str(doc_id), None)
-        return True
+        pass
 
     def delete_dir(self, collection):
-        with self.lock:
-            self._cache.pop(collection, None)
-            self._metadata.pop(collection, None)
-
-        return True
+        pass
 
     def put_metadata(self, collection, doc):
-        self._metadata[collection] = doc.to_storage(as_bson=self._strict)
-        return True
+        pass
 
     def get_metadata(self, collection):
-        try:
-            obj = self._metadata[collection]
-        except KeyError:
-            return None
-        return MetaStorageObject.from_storage(obj, from_bson=self._strict)
+        pass
 
     def create_path(self, collection):
         pass
 
     def close(self):
-        self._cache = collections.defaultdict(dict)
-        self._metadata = {}
+        pass

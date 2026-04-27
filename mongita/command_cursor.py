@@ -26,10 +26,7 @@ class CommandCursor():
         This exists so that we can maintain our position in the cursor and
         to not execute until we start requesting items
         """
-        if self._cursor:
-            return self._cursor
-        self._cursor = self._generator()
-        return self._cursor
+        pass
 
     @support_alert
     def next(self):
@@ -37,12 +34,11 @@ class CommandCursor():
         Returns the next item in the CommandCursor. Raises StopIteration if there
         are no more items.
         """
-        return next(self._gen())
+        pass
 
     @support_alert
     def close(self):
         """
         Close this cursor to free the memory
         """
-
-        self._cursor = iter(())
+        pass

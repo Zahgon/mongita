@@ -8,12 +8,7 @@ def _resolve_client(connection_type, uri):
     :param str uri:
     :rtype: mongita.MongitaClientDisk|pymongo.MongoClient
     """
-    assert connection_type in ('mongita', 'mongodb')
-    if connection_type == 'mongita':
-        if uri:
-            uri = uri.replace('file://', '/')
-        return mongita_client.MongitaClientDisk(uri)
-    return pymongo.MongoClient(host=uri or 'localhost')
+    pass
 
 
 def _resolve_collections(collections):
@@ -23,15 +18,7 @@ def _resolve_collections(collections):
     :param list[str] collections:
     :rtype: list[(str, str|None)]
     """
-    ret = []
-    for raw_collection in collections:
-        attr_chain = raw_collection.split('.', 1)
-        database = attr_chain[0]
-        if len(attr_chain) == 2:
-            ret.append((database, attr_chain[1]))
-        else:
-            ret.append((database, None))
-    return ret
+    pass
 
 
 def _batch_docs(cursor, cnt=1000):
@@ -42,14 +29,7 @@ def _batch_docs(cursor, cnt=1000):
     :param int cnt:
     :rtype: generator[list[dict]]
     """
-    ret = []
-    for doc in cursor:
-        ret.append(doc)
-        if len(ret) == cnt:
-            yield ret
-            ret = []
-    if ret:
-        yield ret
+    pass
 
 
 def _confirm_loop(msg, logger):
@@ -61,15 +41,7 @@ def _confirm_loop(msg, logger):
     :param Logger logger:
     :rtype: (bool, bool)
     """
-    while True:
-        logger.log("%s (yes/yesall/no)", msg)
-        confirm = input()
-        if confirm.lower() == 'yesall':
-            return True, True
-        if confirm.lower() in ('yes', 'y'):
-            return True, False
-        if confirm.lower() in ('no', 'n'):
-            return False, False
+    pass
 
 
 def _replace_collection(source, dest, database, collection, force, logger):
@@ -85,24 +57,7 @@ def _replace_collection(source, dest, database, collection, force, logger):
     :param Logger logger:
     :rtype: bool
     """
-    source_coll = source[database][collection]
-    dest_coll = dest[database][collection]
-    if force:
-        logger.log("Replacing %s.%s (%d documents -> %d documents)...",
-                   database, collection, source_coll.count_documents({}),
-                   dest_coll.count_documents({}))
-    else:
-        confirm, force = _confirm_loop("Replace %s.%s? (%d documents -> %d documents)" %
-                                       (database, collection,
-                                        source_coll.count_documents({}),
-                                        dest_coll.count_documents({})),
-                                       logger)
-        if not confirm:
-            return False
-    dest[database].drop_collection(collection)
-    for doc_batch in _batch_docs(source_coll.find({})):
-        dest_coll.insert_many(doc_batch)
-    return force
+    pass
 
 
 class _Logger():
@@ -110,9 +65,7 @@ class _Logger():
         self.quiet = quiet
 
     def log(self, msg, *args):
-        if not self.quiet:
-            msg = msg % args
-            print("MONGITASYNC: %s" % (msg))
+        pass
 
 
 def mongitasync(source_type, destination_type, collections, force=False,
@@ -130,36 +83,4 @@ def mongitasync(source_type, destination_type, collections, force=False,
     :param str destination_uri:
     :param bool quiet:
     """
-    source = _resolve_client(source_type, source_uri)
-    destination = _resolve_client(destination_type, destination_uri)
-
-    if not collections:
-        raise AssertionError("No collections provided")
-    if not isinstance(collections, list):
-        collections = [collections]
-
-    logger = _Logger(quiet)
-    logger.log("Syncing %d databases/collections from %r (%s) to %r (%s):",
-               len(collections), source_type, source_uri,
-               destination_type, destination_uri)
-    for collection in collections:
-        logger.log('  ' + collection)
-
-    for database, collection in _resolve_collections(collections):
-        if collection:
-            force = _replace_collection(source, destination, database, collection,
-                                        force, logger)
-            continue
-
-        db_collections = list(source[database].list_collection_names())
-        if force:
-            destination.drop_database(database)
-        else:
-            confirm, force = _confirm_loop("Drop database %r on %r?" %
-                                           (database, destination), logger)
-            if confirm:
-                destination.drop_database(database)
-
-        for collection in db_collections:
-            force = _replace_collection(source, destination, database, collection,
-                                        force, logger)
+    pass

@@ -10,4 +10,4 @@ class ReadConcern():
 
     @property
     def document(self):
-        return {}
+        pass
